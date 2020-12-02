@@ -1,6 +1,7 @@
 const path = require('path')
 const HTMLWebpackPlugin = require('html-webpack-plugin')
 const {CleanWebpackPlugin} = require('clean-webpack-plugin')
+const MiniCssExtractPlugin = require('mini-css-extract-plugin')
 const CopyWebpackPlugin  = require('copy-webpack-plugin')
 const OptimizeCssAssetsWebpackPlugin = require('optimize-css-assets-webpack-plugin')
 const TerserWebpackPlugin = require('terser-webpack-plugin')
@@ -25,6 +26,8 @@ const optimization = ()  => {
     return config
 }
 
+const filename = ext => isDev ? `[name].${ext}` : `[name].[hash].${ext}`
+
 
 module.exports  = {
     context: path.resolve(__dirname, 'src'),
@@ -33,7 +36,7 @@ module.exports  = {
         main:'./index.js'
     },
     output: {
-        filename: '[name].[contenthash].js',
+        filename: filename('js'),
         path: path.resolve(__dirname, 'dist')
     },  
     optimization: optimization(),
@@ -46,13 +49,24 @@ module.exports  = {
         new HTMLWebpackPlugin({
             template: './index.html'
         }),
-        new CleanWebpackPlugin()
+        new CleanWebpackPlugin(),
+        new MiniCssExtractPlugin({
+            filename: filename('css')
+        })
     ],
     module: {
         rules: [
             {
                 test: /\.css$/i,
-                use: ['style-loader' ,'css-loader']
+                use: [
+                    {
+                        loader: MiniCssExtractPlugin.loader,
+                        options: {
+                            publicPath: ''
+                        }
+                    }, 
+                    'css-loader'
+                ]
             },
             {
                 test: /\.(png|jpg|svg|gif)$/,

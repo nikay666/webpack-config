@@ -28,6 +28,23 @@ const optimization = ()  => {
 
 const filename = ext => isDev ? `[name].${ext}` : `[name].[hash].${ext}`
 
+const cssLoaders = (extra) => {
+    const loaders = [
+        {
+            loader: MiniCssExtractPlugin.loader,
+            options: {
+                publicPath: ''
+            }
+        },
+        'css-loader'
+    ]
+    if(extra) {
+        loaders.push(extra)
+    }
+
+    return loaders
+}
+
 
 module.exports  = {
     context: path.resolve(__dirname, 'src'),
@@ -58,28 +75,11 @@ module.exports  = {
         rules: [
             {
                 test: /\.css$/i,
-                use: [
-                    {
-                        loader: MiniCssExtractPlugin.loader,
-                        options: {
-                            publicPath: ''
-                        }
-                    }, 
-                    'css-loader'
-                ]
+                use: cssLoaders()
             },
             {
                 test: /\.s[ac]ss$/i,
-                use: [
-                    {
-                        loader: MiniCssExtractPlugin.loader,
-                        options: {
-                            publicPath: ''
-                        }
-                    },
-                    'css-loader',
-                    'sass-loader'
-                ]
+                use: cssLoaders('sass-loader')
             },
             {
                 test: /\.(png|jpg|svg|gif)$/,

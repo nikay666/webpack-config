@@ -57,10 +57,11 @@ module.exports  = {
         path: path.resolve(__dirname, 'dist')
     },  
     optimization: optimization(),
+    devtool: isDev ?  'source-map' :  '',
     devServer: {
         hot: isDev,
         open: true,
-        port: 4200
+        port: 3000
     },
     plugins: [
         new HTMLWebpackPlugin({
@@ -80,6 +81,22 @@ module.exports  = {
             {
                 test: /\.s[ac]ss$/i,
                 use: cssLoaders('sass-loader')
+            },
+            {
+                test: /\.js$/,
+                exclude: /node_modules/,
+                use: {
+                    loader: 'babel-loader',
+                    options: {
+                        presets: [
+                            '@babel/preset-env'
+                        ],
+                        plugins: [
+                            '@babel/plugin-proposal-class-properties',
+                            '@babel/plugin-transform-runtime'
+                        ]
+                    }
+                }
             },
             {
                 test: /\.(png|jpg|svg|gif)$/,

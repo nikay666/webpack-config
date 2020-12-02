@@ -1,1 +1,8 @@
 import './styles/style.scss'
+
+console.log('Hello World!')
+
+async function start(){
+    return await Promise.resolve('async is working')
+ }
+ start().then(console.log);

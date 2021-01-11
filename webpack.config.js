@@ -61,7 +61,9 @@ module.exports  = {
     devServer: {
         hot: isDev,
         open: true,
-        port: 3000
+        port: 3000,
+        contentBase: './src',
+        watchContentBase: true
     },
     plugins: [
         new HTMLWebpackPlugin({
